@@ -2,8 +2,9 @@
 
 * Ruby version: 3.1.1
 * Rails version: 7.0.4.3
+* Node version: v16.20.0
 
-* Clone Reponsitory 
+* Clone Repository 
 * Deployment instructions:
 ```
 cd job-match

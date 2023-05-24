@@ -10,7 +10,7 @@ module JobsHelper
                 SELECT item
                 FROM unnest(arr) AS item
                 GROUP BY item
-                HAVING count(*) > 1
+                HAVING COUNT(*) > 1
             ) s
         $$;
         SELECT
@@ -23,7 +23,7 @@ module JobsHelper
             cardinality(
                 find_dups(
                     string_to_array(
-                        concat(
+                        CONCAT(
                             jobs.required_skills, ',', jobseekers.skills),','))) AS matching_skill_count
         FROM jobseekers, jobs
         WHERE string_to_array(jobseekers.skills, ',') && string_to_array(jobs.required_skills,( ','))
