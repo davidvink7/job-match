@@ -1,45 +1,34 @@
 module JobsHelper
 
     def self.match
-        sql = Job.connection.execute <<-SQL
-        select 
-            jobseekers.id as jobseeker_id,
-            jobseekers.name as jobseeker_name,
-            jobs.id as job_id,
-            jobs.title as job_title,
-            jobseekers.skills as jobseeker_skills,
-            jobs.required_skills as required_skills
-        from jobseekers, jobs
-        where string_to_array(jobseekers.skills, ',') && string_to_array(jobs.required_skills,( ','));
+        Job.connection.execute <<-SQL
+        CREATE OR REPLACE FUNCTION find_dups(arr anyarray)
+        RETURNS anyarray LANGUAGE SQL immutable
+        AS $$
+            SELECT array_agg(item)
+            FROM (
+                SELECT item
+                FROM unnest(arr) AS item
+                GROUP BY item
+                HAVING count(*) > 1
+            ) s
+        $$;
+        SELECT
+            jobseekers.id AS jobseeker_id,
+            jobseekers.name AS jobseeker_name,
+            jobs.id AS job_id,
+            jobs.title AS job_title,
+            jobseekers.skills AS jobseeker_skills,
+            jobs.required_skills AS required_skills,
+            cardinality(
+                find_dups(
+                    string_to_array(
+                        concat(
+                            jobs.required_skills, ',', jobseekers.skills),','))) AS matching_skill_count
+        FROM jobseekers, jobs
+        WHERE string_to_array(jobseekers.skills, ',') && string_to_array(jobs.required_skills,( ','))
+        ORDER BY jobseeker_id, matching_skill_count DESC, job_id;
         SQL
-
-        data = add_match_count(sql.values)
-        data = sort_by_id_match_count(data)
-
-        res = {}
-
-        data.each_with_index do |row,idx|
-            res[idx] = {
-                'jobseeker_id' => row[0],
-                'jobseeker_name' => row[1],
-                'job_id' => row[2],
-                'job_title' => row[3],
-                'matching_skill_count' => row[4],
-            }
-        end
-
-        return res
-    end
-
-    def self.add_match_count(data)
-        data.map do |row|
-            skill_count = (row[-2].split(',') & row[-1].split(',')).count
-            row[0..-3] << skill_count
-        end
-    end
-
-    def self.sort_by_id_match_count(data)
-        data.sort_by{ |e| [ e[0], e[-1] ]}
     end
 
 end
