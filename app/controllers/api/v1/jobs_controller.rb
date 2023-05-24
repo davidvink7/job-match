@@ -3,9 +3,6 @@ class Api::V1::JobsController < ApplicationController
 
   def index
     sql = Job.connection.execute <<-SQL
-      with elements (element) as (
-        select unnest(ARRAY['a','b','c','a','a'])
-      )
       select 
         jobseekers.id as jobseeker_id,
         jobseekers.name as jobseeker_name,
@@ -17,9 +14,11 @@ class Api::V1::JobsController < ApplicationController
       where string_to_array(jobseekers.skills, ',') && string_to_array(jobs.required_skills,( ','));
     SQL
 
-    data = sql.values
+    # with elements (element) as (
+    #   select unnest(ARRAY['a','b','c','a','a'])
+    # )
 
-    res = data.map do |row|
+    res = sql.values.map do |row|
       skill_count = (row[4].split(',') & row[5].split(',')).count
       res_row = row[0..-3] << skill_count
     end

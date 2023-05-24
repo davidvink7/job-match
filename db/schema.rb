@@ -28,4 +28,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_23_085406) do
     t.datetime "updated_at"
   end
 
+  create_table "skills", id: false, force: :cascade do |t|
+    t.text "skills"
+  end
+
+  create_table "test_table", id: false, force: :cascade do |t|
+    t.bigint "jobseeker_id"
+    t.string "jobseeker_name"
+    t.bigint "job_id"
+    t.string "job_title"
+    t.text "jobseeker_skills"
+    t.text "required_skills"
+  end
+
+  create_table "x_a", id: false, force: :cascade do |t|
+    t.integer "id1"
+    t.text "shared"
+  end
+
+  create_table "x_b", id: false, force: :cascade do |t|
+    t.integer "id1"
+    t.text "shared"
+  end
+
 end
