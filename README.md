@@ -1,24 +1,24 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Ruby version: 3.1.1
+* Rails version: 7.0.4.3
 
-Things you may want to cover:
+* Clone Reponsitory 
+* Deployment instructions:
+```
+cd job-match
+bundle
+rake db:create
+rake db:migrate
+rake db:seed
+```
 
-* Ruby version
+* Install npm dependencies
+```
+yarn
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Launch Environment:
+```
+bin/dev
+```
