@@ -10,45 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_23_085406) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_29_224519) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "jobs", force: :cascade do |t|
-    t.string "title"
+    t.citext "title"
     t.text "required_skills"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["title"], name: "index_jobs_on_title", unique: true
   end
 
   create_table "jobseekers", force: :cascade do |t|
-    t.string "name"
+    t.citext "name"
     t.text "skills"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "skills", id: false, force: :cascade do |t|
-    t.text "skills"
-  end
-
-  create_table "test_table", id: false, force: :cascade do |t|
-    t.bigint "jobseeker_id"
-    t.string "jobseeker_name"
-    t.bigint "job_id"
-    t.string "job_title"
-    t.text "jobseeker_skills"
-    t.text "required_skills"
-  end
-
-  create_table "x_a", id: false, force: :cascade do |t|
-    t.integer "id1"
-    t.text "shared"
-  end
-
-  create_table "x_b", id: false, force: :cascade do |t|
-    t.integer "id1"
-    t.text "shared"
+    t.index ["name"], name: "index_jobseekers_on_name", unique: true
   end
 
 end

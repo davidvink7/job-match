@@ -2,7 +2,7 @@
 
 * Ruby version: 3.1.1
 * Rails version: 7.0.4.3
-* Node version: v16.20.0
+* Node version: 18.16.0
 
 * Clone Repository 
 * Deployment instructions:

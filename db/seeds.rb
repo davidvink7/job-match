@@ -34,6 +34,10 @@ Jobseeker.connection.execute <<-SQL
   insert into jobseekers(name, skills)
   select name, skills
   from post_jobseekers
+  on conflict(name) do
+  update set
+    name = EXCLUDED.name,
+    skills = EXCLUDED.skills
   returning id
 SQL
 
@@ -41,5 +45,9 @@ Job.connection.execute <<-SQL
   insert into jobs(title, required_skills)
   select title, required_skills
   from post_jobs
+  on conflict(title) do
+  update set
+    title = EXCLUDED.title,
+    required_skills = EXCLUDED.required_skills
   returning id
 SQL
